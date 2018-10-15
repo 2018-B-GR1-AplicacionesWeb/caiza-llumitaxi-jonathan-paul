@@ -1,10 +1,12 @@
-{
-  "nombre":"Jonathan",
-  "edad":23,
-  "sueldo": 10.1,
-  "casado":false,
-  "hijos":null,
-  "mascota":{
-    "nombre":"Cachetes"
+[
+  {
+    "nombre":"Jonathan",
+    "edad":23,
+    "sueldo": 10.1,
+    "casado":false,
+    "hijos":null,
+    "mascota":{
+      "nombre":"Cachetes"
+    }
   }
-}
+]
