@@ -127,23 +127,29 @@ nuevaPromesaLectura
 
 
 
+
+
+
+
+
+
 /*******************************************************************************/
 
 
-const appendFilePromesaLectura = (nombreArchivo, contenidoLeido) => {
+
+const appendFilePromesaLectura = new Promise(
     (resolve, reject) => {
-        fs.readFile(nombreArchivo, 'utf-8',
+        fs.readFile('06-texto22.txt', 'utf-8',
             (err, contenidoArchivo) => {
                 if (err) {
                     //reject(err);
-                    resolve('');
+                    resolve ('');
                 } else {
                     resolve(contenidoArchivo);
                 }
             });
     }
-}
-
+);
 
 const appendFilePromesaEscritura = (nombreArchivo, contenidoLeido) => {
     return new Promise(
