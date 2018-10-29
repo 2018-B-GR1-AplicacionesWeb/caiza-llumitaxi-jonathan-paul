@@ -136,13 +136,13 @@ const appendFilePromesaLectura = (nombreArchivo, contenidoLeido) => {
             (err, contenidoArchivo) => {
                 if (err) {
                     //reject(err);
-                    resolve ('');
+                    resolve('');
                 } else {
                     resolve(contenidoArchivo);
                 }
             });
     }
-)
+}
 
 
 const appendFilePromesaEscritura = (nombreArchivo, contenidoLeido) => {
