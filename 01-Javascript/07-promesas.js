@@ -69,7 +69,7 @@ nuevaPrmesaLectura
 
 
 const fs = require('fs');
-
+/*
 const nuevaPromesaLectura = new Promise(
     (resolve, reject) => {
         fs.readFile('06-texto22.txt', 'utf-8',
@@ -127,57 +127,49 @@ nuevaPromesaLectura
 
 
 
-
-
-
+*/
 
 
 
 /*******************************************************************************/
 
-
-
-const appendFilePromesaLectura = new Promise(
-    (resolve, reject) => {
-        fs.readFile('06-texto22.txt', 'utf-8',
-            (err, contenidoArchivo) => {
-                if (err) {
-                    //reject(err);
-                    resolve ('');
-                } else {
-                    resolve(contenidoArchivo);
-                }
-            });
-    }
-);
-
-const appendFilePromesaEscritura = (nombreArchivo, contenidoLeido) => {
+const nuevaPromesaAppendFile = (nombreArchivo,contenidoArchivo) => {
     return new Promise(
         (resolve, reject) => {
-            const contenido = contenidoLeido ? contenidoLeido + 'Otro ola' : 'Otro ola';
-            fs.writeFile(nombreArchivo, contenidoLeido,
-                (err,) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve('LO QUE SEA');
+            fs.readFile(nombreArchivo,'utf-8',
+                (error,contenidoArchivoLeido)=>{
+                    if (error){
+                        fs.writeFile(nombreArchivo,contenidoArchivo,
+                            (err)=>{
+                                if (err) {
+                                    reject(console.error('Error escribiendo'));
+                                } else {
+                                    resolve(contenidoArchivo);
+                                }
+                            }
+                        );
+                    }else{
+                        fs.writeFile(nombreArchivo,contenidoArchivoLeido+contenidoArchivo,
+                            (err)=>{
+                                if (err) {
+                                    reject(console.error('Error escribiendo'));
+                                } else {
+                                    resolve(contenidoArchivoLeido+contenidoArchivo);
+                                }
+                            }
+                        );
                     }
-                });
+
+                }
+            );
         }
     );
 };
 
-nuevaPromesaLectura
+nuevaPromesaAppendFile('06-texto.txt','\n Adios Mundo')
     .then(
-        (nombreArchivo, contenidoArchivo ) => {
-            console.log('Todo bien', contenidoArchivo);
-            return nuevaPromesaEscritura(contenidoArchivo, '\n Agregar mas texto');
-        }
-    )
-    //Se puede concatenar promesas
-    .then(
-        (contenidoCompleto, contenidoArchivo) =>{
-            console.log('Contenido completo', contenidoCompleto)
+        (resultadoOk) => {
+            console.log('Todo bien', resultadoOk);
         }
     )
     .catch(
