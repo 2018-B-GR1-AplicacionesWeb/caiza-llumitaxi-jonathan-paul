@@ -1,7 +1,7 @@
 //06-callback-propio.js
 
 const  fs = require('fs');
-/*
+
 function appendFile(nombreArchivo, contenidoArchivo, callback) {
 
     //1ero leer si existe el archivo
@@ -59,7 +59,7 @@ const respuesta = {
     nombreArchivo :'',
     contenidoArchivo :'',
     erroe : ''
-};*/
+};
 
 function ejercicioDeArchivos(arregloString, callback) {
     const arregloRespuestas = [];
@@ -96,4 +96,8 @@ ejercicioDeArchivos(arregloStrings,
         console.log(arregloRespuestas);
     }
 );
+
+
+
+
 
