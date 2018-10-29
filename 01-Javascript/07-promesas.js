@@ -163,14 +163,14 @@ const appendFilePromesaEscritura = (nombreArchivo, contenidoLeido) => {
 
 nuevaPromesaLectura
     .then(
-        (contenidoArchivo) => {
+        (nombreArchivo, contenidoArchivo ) => {
             console.log('Todo bien', contenidoArchivo);
-            return nuevaPromesaEscritura(contenidoArchivo);
+            return nuevaPromesaEscritura(contenidoArchivo, '\n Agregar mas texto');
         }
     )
     //Se puede concatenar promesas
     .then(
-        (contenidoCompleto) =>{
+        (contenidoCompleto, contenidoArchivo) =>{
             console.log('Contenido completo', contenidoCompleto)
         }
     )
@@ -179,24 +179,3 @@ nuevaPromesaLectura
             console.log('Algo malo paso', resultadoError);
         }
     );
-
-appendFile('06-texto.txt','\n Adios Mundo',
-    nuevaPromesaLectura
-        .then(
-            (contenidoArchivo) => {
-                console.log('Todo bien', contenidoArchivo);
-                return nuevaPromesaEscritura(contenidoArchivo);
-            }
-        )
-        //Se puede concatenar promesas
-        .then(
-            (contenidoCompleto) =>{
-                console.log('Contenido completo', contenidoCompleto)
-            }
-        )
-        .catch(
-            (resultadoError) => {
-                console.log('Algo malo paso', resultadoError);
-            }
-        )
-);
