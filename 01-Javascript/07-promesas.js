@@ -123,16 +123,12 @@ nuevaPromesaLectura
     );
 
 
-
-
-
-
 */
 
 
 
 /*******************************************************************************/
-
+/*
 const nuevaPromesaAppendFile = (nombreArchivo,contenidoArchivo) => {
     return new Promise(
         (resolve, reject) => {
@@ -170,6 +166,57 @@ nuevaPromesaAppendFile('06-texto.txt','\n Adios Mundo')
     .then(
         (resultadoOk) => {
             console.log('Todo bien', resultadoOk);
+        }
+    )
+    .catch(
+        (resultadoError) => {
+            console.log('Algo malo paso', resultadoError);
+        }
+    );
+
+
+
+
+
+*/
+
+
+
+const appendFilePromesa = (nombreArchivo,nuevoContenidoArchivo) => {
+    return new Promise(
+        (resolve, reject) => {
+            fs.readFile(nombreArchivo, 'utf-8',
+                (error, contenidoArchivoLeido) => {
+                    if (error) {
+                        fs.writeFile(nombreArchivo, contenidoArchivo, (err) => {
+                            if (err) {
+                                reject(console.error('Error escribiendo'));
+                            } else {
+                                resolve(contenidoArchivoLeido);
+                            }
+                        });
+                    } else {
+                        fs.writeFile(
+                            nombreArchivo,
+                            contenidoArchivoLeido + nuevoContenidoArchivo, (err) => {
+                                if (err) {
+                                    reject(console.error('Error escribiendo'));
+                                } else {
+                                    resolve(contenidoArchivoLeido + nuevoContenidoArchivo);
+                                }
+                            }
+                        );
+                    }
+                }
+            );
+        }
+    );
+}
+
+appendFilePromesa('06-texto.txt','\n Adios Mundo')
+    .then(
+        (contenidoArchivo) => {
+            console.log('Todo bien', contenidoArchivo);
         }
     )
     .catch(
