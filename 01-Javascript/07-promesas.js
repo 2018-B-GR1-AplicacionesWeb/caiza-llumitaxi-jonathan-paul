@@ -224,3 +224,31 @@ appendFilePromesa('06-texto.txt','\n Adios Mundo')
             console.log('Algo malo paso', resultadoError);
         }
     );
+
+
+
+
+// SYNC  y  ASYNC
+//ASYNC  --> Se demora algo ?
+// Callback  ---> funcion Anonima
+
+const funcionConCallback = function (parametros, callback) {
+    callback(); //...
+};
+
+//Promesas --> new Promise
+
+const funcionConCallback = function (parametros) {
+    return new PromiseRejectionEvent(
+        (resolve, reject) => {
+            resolve();
+            reject();
+        }
+    );
+};
+
+
+
+
+
+
