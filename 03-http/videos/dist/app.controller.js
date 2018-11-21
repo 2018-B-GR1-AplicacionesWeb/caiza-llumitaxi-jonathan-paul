@@ -24,8 +24,8 @@ const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
 const rxjs_1 = require("rxjs");
 let AppController = class AppController {
-    constructor(appService) {
-        this.appService = appService;
+    constructor(_servicio) {
+        this._servicio = _servicio;
     }
     raiz(todoslosQueryParams, nombre) {
         console.log(todoslosQueryParams);
@@ -66,8 +66,26 @@ let AppController = class AppController {
         const respuestaa = rxjs_1.of('AdiosMundo');
         return respuestaa;
     }
-    adiosMundoPOST() {
-        return 'Adios Mundo Post';
+    crearUsuario(usuario, nombre, cabeceras, codigo, res, req) {
+        console.log('Cookies: ', req.cookies);
+        console.log('Cookies: ', req.secret);
+        console.log('Cookies Seguras: ', req.signedCookies);
+        console.log(usuario);
+        if (codigo === '1234') {
+            const bdd = this._servicio.crearUsuario(usuario);
+            res.append('token', '5678');
+            res.cookie('app', 'web');
+            res.cookie('segura', 'secreto', {
+                signed: true
+            });
+            res.json(bdd);
+        }
+        else {
+            throw new common_1.UnauthorizedException({
+                mensaje: 'Error de autorizacion',
+                error: 401
+            });
+        }
     }
 };
 __decorate([
@@ -111,11 +129,18 @@ __decorate([
     __metadata("design:returntype", rxjs_1.Observable)
 ], AppController.prototype, "adiosMundoPObservable", null);
 __decorate([
-    common_1.Post('adiosMundoPost'),
+    common_1.Post('crearUsuario'),
+    common_1.HttpCode(201),
+    __param(0, common_1.Body()),
+    __param(1, common_1.Body('nombre')),
+    __param(2, common_1.Headers()),
+    __param(3, common_1.Headers('seguridad')),
+    __param(4, common_1.Res()),
+    __param(5, common_1.Req()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String)
-], AppController.prototype, "adiosMundoPOST", null);
+    __metadata("design:paramtypes", [Object, String, Object, Object, Object, Object]),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "crearUsuario", null);
 AppController = __decorate([
     common_1.Controller(),
     __metadata("design:paramtypes", [app_service_1.AppService])

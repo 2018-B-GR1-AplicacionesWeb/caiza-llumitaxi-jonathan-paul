@@ -1,0 +1,4 @@
+{"idPelicula":1,"nombrePelicula":"Soy Leyenda","añoLanzamiento":"2007","actorePrincipal":"Will Smith"}
+{"idPelicula":2,"nombrePelicula":"Inception","añoLanzamiento":"2012","actorePrincipal":"Leonardo Di Caprio"}
+{"idPelicula":3,"nombrePelicula":"El ilusionista","añoLanzamiento":"2006","actorePrincipal":"Edwar Norton"}
+{"idPelicula":1,"nombrePelicula":"1","añoLanzamiento":"1","actorePrincipal":"1"}

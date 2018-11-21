@@ -1,10 +1,27 @@
-import {Get, Controller, InternalServerErrorException, HttpCode, Post, Query, Param} from '@nestjs/common';
+import {
+    Get,
+    Controller,
+    InternalServerErrorException,
+    HttpCode,
+    Post,
+    Query,
+    Param,
+    Body,
+    Headers,
+    UnauthorizedException, Res, Req
+} from '@nestjs/common';
+
 import { AppService } from './app.service';
 import {Observable, of} from "rxjs";
+import {Request, Response} from 'express'
 
 @Controller()   //decoradores -- una funcion antes de lo q sea ponga despues
+//Controler(usuario)  // usado para las rutas
+//http://localhost:3000/usuario
 export class AppController { // Export en otros archivos importar a esta clase
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly _servicio: AppService) {
+
+  }
 
   // @Get()
   // root(): string { // el nombre q se le de al metodo no importa
@@ -21,8 +38,8 @@ export class AppController { // Export en otros archivos importar a esta clase
       return 'Hola Mundo '+nombre;
   }
 
-    @Get('segmentoUno/segmentoDos/:idUsuario') // url
-    parametroRuta(@Param('idUsuario')id) {
+    @Get('segmentoUno/segmentoDos/:idUsuario') // url  con parametro de ruta
+    parametroRuta(@Param('idUsuario')id) { //Paramtro de ruta
         // return this.appService.root();
         return id
     }
@@ -71,8 +88,50 @@ export class AppController { // Export en otros archivos importar a esta clase
         return respuestaa;
     }
 
-    @Post('adiosMundoPost')
-    adiosMundoPOST(): string {
-        return 'Adios Mundo Post';
+    // @Post('adiosMundoPost')
+    // adiosMundoPOST(): string {
+    //     return 'Adios Mundo Post';
+    // }
+
+    @Post('crearUsuario')
+    @HttpCode(201) //se usa cuando_todo sale bien mientras que el throw es para cuando algo sale mal
+    crearUsuario(
+        @Body() usuario: Usuario,
+        @Body('nombre') nombre: string,
+        @Headers() cabeceras,
+        @Headers('seguridad') codigo,
+        @Res() res: Response,
+        @Req() req: Request | any,
+    ){
+        console.log('Cookies: ',req.cookies); //Solo lectura
+        console.log('Cookies: ',req.secret); //Solo lectura
+        console.log('Cookies Seguras: ',req.signedCookies); //Solo lectura
+        console.log(usuario);
+        // console.log(cabeceras);
+        if(codigo==='1234'){
+            const bdd = this._servicio.crearUsuario(usuario);
+            res.append('token','5678'); // el codigo se queda aqui
+            res.cookie('app','web');
+            res.cookie('segura','secreto',{
+                // secure: true,
+                signed: true
+            });
+            // res.send('ok');
+            res.json(bdd);
+            // return 'ok';
+        }else{
+            throw new UnauthorizedException(
+                {
+                    mensaje: 'Error de autorizacion',
+                    error: 401
+                }
+            )
+        }
     }
+
+
+}
+
+export interface Usuario {
+    nombre:string;
 }

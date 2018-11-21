@@ -104,10 +104,6 @@ var datosDeUsuario ={  //sirve apra unir dos objetos
 console.log (datosDeUsuario);
 
 
-
-
-
-
 //OBJETOS
 
 var atributosDelOnjeto = Object.keys(datosDeUsuario);
