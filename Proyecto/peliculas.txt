@@ -1,0 +1,6 @@
+﻿{"idPelicula":1,"nombrePelicula":"Soy Leyenda","tipoPelicula":"Terror","actorPrincipal":"Will Smith","añoLanzamiento":"2007","precioPelicula":"15.50"}
+{"idPelicula":2,"nombrePelicula":"Inception","tipoPelicula":"Terror","actorPrincipal":"Leonardo Di Caprio","añoLanzamiento":"2012","precioPelicula":"25.50"}
+{"idPelicula":3,"nombrePelicula":"a","tipoPelicula":"Terror","actorPrincipal":"Will Smith","añoLanzamiento":"2007","precioPelicula":"15.50"}
+{"idPelicula":4,"nombrePelicula":"b","tipoPelicula":"Terror","actorPrincipal":"Will Smith","añoLanzamiento":"2007","precioPelicula":"15.50"}
+{"idPelicula":5,"nombrePelicula":"c","tipoPelicula":"Terror","actorPrincipal":"Will Smith","añoLanzamiento":"2007","precioPelicula":"15.50"}
+{"idPelicula":6,"nombrePelicula":"d","tipoPelicula":"Terror","actorPrincipal":"Will Smith","añoLanzamiento":"2007","precioPelicula":"15.50"}
