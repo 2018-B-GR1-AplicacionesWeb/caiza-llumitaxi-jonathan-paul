@@ -1,47 +1,18 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var opcionesMenu_1 = require("../Proyecto/opcionesMenu");
 var inquirer = require('inquirer');
 var fs = require('fs');
 var rxjs = require('rxjs');
-var mergeMap = require('rxjs/operators').mergeMap; //Recibira un observable
+var timer = require('rxjs').timer;
+var mergeMap = require('rxjs/operators').mergeMap;
 var map = require('rxjs/operators').map;
+////////////////////////////////////////////////////////RECURSOS///////////////////////////////////////
+var nombreDelArchivo = 'bdd.json';
 var preguntaMenu = {
     type: 'list',
     name: 'opcionMenu',
-    message: 'Que quieres hacer',
+    message: 'ESCOGA UNA OPCION ',
     choices: [
         'Crear',
         'Borrar',
@@ -49,221 +20,263 @@ var preguntaMenu = {
         'Actualizar',
     ]
 };
-var preguntaUsuario = [
+/**********************Preguntas Cliente*******************************/
+var preguntasActulizarCliente = [
+    {
+        type: 'input',
+        name: 'idCliente',
+        message: 'Ingrese ID Cliente: ',
+    }
+];
+var preguntaEliminarClientePorNombre = [
+    {
+        type: 'input',
+        name: 'nombre',
+        message: '¿Cuál es el cliente que quiere eliminar? ',
+    }
+];
+var preguntaBuscarNombreCliente = [
+    {
+        type: 'input',
+        name: 'nombre',
+        message: 'Ingrese nombre del Cliente a Buscar: ',
+    }
+];
+var preguntaCliente = [
     {
         type: 'input',
         name: 'id',
-        message: 'Cual es tu id'
+        message: '¿Cual es tu id? '
     },
     {
         type: 'input',
         name: 'nombre',
-        message: 'Cual es tu nombre'
+        message: '¿Cual es tu nombre? '
     },
 ];
-var preguntaUsuarioBusquedaPorNombre = [
+var preguntaActualizarCliente = [
     {
         type: 'input',
         name: 'nombre',
-        message: 'Escribe el nombre del usuario a buscar'
-    }
+        message: 'Ingrese nombre del cliente: '
+    },
 ];
-var preguntaUsuarioNuevoNombre = [
+/**********************Preguntas Pelicula*******************************/
+var preguntaActualizarPelicula = [
+    { type: 'input', name: 'precioPelicula', message: 'Ingrese el precio de la pelicula:' },
+    { type: 'list', name: 'tipoPelicula', message: 'Escoga la categoria:', choices: opcionesMenu_1.tiposPeliculas },
+    { type: 'input', name: 'actorPrincipal', message: 'Ingrese nombre del actor principal:' },
+    { type: 'input', name: 'añoLanzamiento', message: 'Ingrese el año de lanzamiento' },
+];
+var preguntasRegistroPelicula = [
     {
         type: 'input',
-        name: 'nombre',
-        message: 'Escribe tu nuevo nombre'
-    }
+        name: 'idPelicula',
+        message: 'Ingrese id de la pelicula:',
+        validate: function (value) {
+            var valid = !isNaN(parseFloat(value));
+            return valid || '\n \t\tIngrese un Id valido debe ser numero\n';
+        },
+        filter: Number
+    },
+    { type: 'input', name: 'nombrePelicula', message: 'Ingrese el nombre de la pelicula:' },
+    { type: 'list', name: 'tipoPelicula', message: 'Escoga categoria:', choices: opcionesMenu_1.tiposPeliculas },
+    { type: 'input', name: 'actorPrincipal', message: 'Ingrese nombre del actor principal:' },
+    { type: 'input', name: 'añoLanzamiento', message: 'Ingrese el año de lanzamiento' },
+    { type: 'input', name: 'precioPelicula', message: 'Ingrese el precio de la Pelicula' },
 ];
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        var respuesta, _a, respuestaUsuario, respuestaUsuarioBusquedaPorNombre, existeUsuario, respuestaNuevoNombre, e_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    console.log('Empezo');
-                    _b.label = 1;
-                case 1:
-                    _b.trys.push([1, 14, , 15]);
-                    return [4 /*yield*/, inicializarBase()];
-                case 2:
-                    _b.sent();
-                    return [4 /*yield*/, inquirer.prompt(preguntaMenu)];
-                case 3:
-                    respuesta = _b.sent();
-                    _a = respuesta.opcionMenu;
-                    switch (_a) {
-                        case 'Crear': return [3 /*break*/, 4];
-                        case 'Actualizar': return [3 /*break*/, 7];
-                    }
-                    return [3 /*break*/, 13];
-                case 4: return [4 /*yield*/, inquirer.prompt(preguntaUsuario)];
-                case 5:
-                    respuestaUsuario = _b.sent();
-                    return [4 /*yield*/, anadirUsuario(respuestaUsuario)];
-                case 6:
-                    _b.sent();
-                    main();
-                    return [3 /*break*/, 13];
-                case 7: return [4 /*yield*/, inquirer.prompt(preguntaUsuarioBusquedaPorNombre)];
-                case 8:
-                    respuestaUsuarioBusquedaPorNombre = _b.sent();
-                    return [4 /*yield*/, buscarUsuarioPorNombre(respuestaUsuarioBusquedaPorNombre.nombre)];
-                case 9:
-                    existeUsuario = _b.sent();
-                    if (!existeUsuario) return [3 /*break*/, 12];
-                    return [4 /*yield*/, inquirer.prompt(preguntaUsuarioNuevoNombre)];
-                case 10:
-                    respuestaNuevoNombre = _b.sent();
-                    return [4 /*yield*/, editarUsuario(respuestaUsuarioBusquedaPorNombre.nombre, respuestaNuevoNombre.nombre)];
-                case 11:
-                    _b.sent();
-                    return [3 /*break*/, 13];
-                case 12:
-                    console.log('El usuario no existe');
-                    main();
-                    return [3 /*break*/, 13];
-                case 13: return [3 /*break*/, 15];
-                case 14:
-                    e_1 = _b.sent();
-                    console.log('Hubo un error');
-                    return [3 /*break*/, 15];
-                case 15: return [2 /*return*/];
-            }
-        });
-    });
-}
-function inicializarBase() {
-    /************* observable *************/
-    //rxjs.from  ---> para apsar prmesas a observables
-    var leerBDD$ = rxjs.from(leerBDD());
-    leerBDD$
-        .pipe(mergeMap(function (respuestaLeerBDD) {
-    }));
-    /************* promesa *************/
-    /*
-    return new Promise(
-        (resolve, reject) => {
-            fs.readFile('bdd.json', 'utf-8',
-                (err, contenido) => {
-                    if (err) {
-                        fs.writeFile('bdd.json',
-                            '{"usuarios":[],"mascotas":[]}',
-                            (err) => {
-                                if (err) {
-                                    reject({mensaje: 'Error'});
-                                }
-                                resolve({mensaje: 'ok'});
-                            });
-                    } else {
-                        resolve({mensaje: 'ok'});
-                    }
-                });
-        }
-    );
-    */
-}
-/**************************  PROMESAS  ***********************************/
-//Utilizacion de Promesa
-function leerBDD() {
-    return new Promise(function (resolve) {
-        fs.readFile('bdd.json', 'utf-8', function (error, contenidoLeido) {
+var preguntaEliminarPelicula = [
+    { type: 'input', name: 'nombrePelicula', message: '¿Qué Pelicula desea borrar?' }
+];
+var preguntaBuscarPelicula = [
+    { type: 'input', name: 'nombrePelicula', message: '¿Qué pelicula desea buscar?' }
+];
+/*************************** Base de Datos ***************************/
+function inicialiarBDD() {
+    return new Promise(function (resolve, reject) {
+        fs.readFile(nombreDelArchivo, 'utf-8', function (error, contenidoArchivo) {
             if (error) {
-                resolve({
-                    mensaje: 'Base de datos vacia',
-                    bdd: null
+                fs.writeFile(nombreDelArchivo, '{"clientes":[],"peliculas":[]}', function (error) {
+                    if (error) {
+                        reject({
+                            mensaje: 'ERROR AL CREAR BASE',
+                            error: 500
+                        });
+                    }
+                    else {
+                        resolve({
+                            mensaje: 'BDD LEÍDA',
+                            bdd: JSON.parse('{"clientes":[],"peliculas":[]}')
+                        });
+                    }
                 });
             }
             else {
                 resolve({
-                    mensaje: 'Si existe la Base',
-                    bdd: JSON.parse(contenidoLeido)
+                    mensaje: 'BDD LEÍDA',
+                    bdd: JSON.parse(contenidoArchivo)
                 });
             }
         });
     });
 }
-//Utilizacion de promesa
-function crearBDD() {
-    var contenidoInicialBDD = '{"usuarios":[],"mascotas":[]}';
+/***************************** OperacionesCRUD **************************/
+function main() {
+    var respuestaBDD$ = rxjs.from(inicialiarBDD());
+    respuestaBDD$
+        .pipe(preguntarOpcionesMenu(), opcionesRespuesta(), ejecutarAcccion(), guardarBaseDeDatos())
+        .subscribe(function (data) {
+        // console.log(data);
+    }, function (error) {
+        console.log(error);
+    }, function () {
+        main();
+        // console.log('Complete');
+    });
+}
+function guardarBDD(bdd) {
     return new Promise(function (resolve, reject) {
-        fs.writeFile('bdd.json', contenidoInicialBDD, function (err) {
-            if (err) {
+        fs.writeFile(nombreDelArchivo, JSON.stringify(bdd), function (error) {
+            if (error) {
                 reject({
-                    mensaje: 'Error creando Base',
+                    mensaje: 'Error creando',
                     error: 500
                 });
             }
             else {
                 resolve({
-                    mensaje: 'BDD creada'
+                    mensaje: 'BDD guardada',
+                    bdd: bdd
                 });
             }
         });
     });
 }
-/**************************  OBSERVABLE  ***********************************/
-function anadirUsuario(usuario) {
-    return new Promise(function (resolve, reject) {
-        fs.readFile('bdd.json', 'utf-8', function (err, contenido) {
-            if (err) {
-                reject({ mensaje: 'Error leyendo' });
-            }
-            else {
-                var bdd = JSON.parse(contenido);
-                bdd.usuarios.push(usuario);
-                fs.writeFile('bdd.json', JSON.stringify(bdd), function (err) {
-                    if (err) {
-                        reject(err);
-                    }
-                    else {
-                        resolve({ mensaje: 'Usuario Creado' });
-                    }
-                });
-            }
-        });
+function preguntarOpcionesMenu() {
+    return mergeMap(// Respuesta Anterior Observable
+    function (respuestaBDD) {
+        return rxjs
+            .from(inquirer.prompt(preguntaMenu))
+            .pipe(map(// respuesta ant obs
+        function (respuesta) {
+            respuestaBDD.opcionMenu = respuesta;
+            return respuestaBDD;
+        }));
     });
 }
-function editarUsuario(nombre, nuevoNombre) {
-    return new Promise(function (resolve, reject) {
-        fs.readFile('bdd.json', 'utf-8', function (err, contenido) {
-            if (err) {
-                reject({ mensaje: 'Error leyendo' });
-            }
-            else {
-                var bdd = JSON.parse(contenido);
-                var indiceUsuario = bdd.usuarios
-                    .findIndex(function (usuario) {
-                    return usuario.nombre = nombre;
-                });
-                bdd.usuarios[indiceUsuario].nombre = nuevoNombre;
-                fs.writeFile('bdd.json', JSON.stringify(bdd), function (err) {
-                    if (err) {
-                        reject(err);
-                    }
-                    else {
-                        resolve({ mensaje: 'Usuario Editado' });
-                    }
-                });
-            }
-        });
+function opcionesRespuesta() {
+    return mergeMap(function (respuestaBDD) {
+        var opcion = respuestaBDD.opcionMenu.opcionMenu;
+        switch (opcion) {
+            case 'Crear':
+                return rxjs
+                    .from(inquirer.prompt(preguntaCliente))
+                    .pipe(map(function (cliente) {
+                    respuestaBDD.cliente = cliente;
+                    return respuestaBDD;
+                }));
+            case 'Buscar':
+                return buscarClientePorNombre(respuestaBDD);
+                break;
+            case 'Actualizar':
+                return preguntarIdCliente(respuestaBDD);
+            case 'Borrar':
+                return eliminarPorNombre(respuestaBDD);
+                break;
+        }
     });
 }
-function buscarUsuarioPorNombre(nombre) {
-    return new Promise(function (resolve, reject) {
-        fs.readFile('bdd.json', 'utf-8', function (err, contenido) {
-            if (err) {
-                reject({ mensaje: 'Error leyendo' });
-            }
-            else {
-                var bdd = JSON.parse(contenido);
-                var respuestaFind = bdd.usuarios
-                    .find(function (usuario) {
-                    return usuario.nombre === nombre;
-                });
-                resolve(respuestaFind);
-            }
-        });
+function guardarBaseDeDatos() {
+    return mergeMap(// Respuesta del anterior OBS
+    function (respuestaBDD) {
+        // console.log(respuestaBDD.bdd);
+        return rxjs.from(guardarBDD(respuestaBDD.bdd));
     });
 }
+function ejecutarAcccion() {
+    return map(// Respuesta del anterior OBS
+    function (respuestaBDD) {
+        var opcion = respuestaBDD.opcionMenu.opcionMenu;
+        switch (opcion) {
+            case 'Crear':
+                var cliente = respuestaBDD.cliente;
+                /*******************************************************************************>>>>>>>>>>*/
+                // console.log(respuestaBDD.bdd.clientes);
+                respuestaBDD.bdd.clientes.push(cliente);
+                console.log('\n\tCliente registrado exitoxamente\n');
+                return respuestaBDD;
+            case 'Actualizar':
+                var indice = respuestaBDD.indiceCliente;
+                respuestaBDD.bdd.clientes[indice].nombre = respuestaBDD.cliente.nombre;
+                console.log('\n\tCliente actualizado exitoxamente\n', respuestaBDD.bdd.clientes[indice].nombre);
+                console.log('\n');
+                return respuestaBDD;
+            case 'Buscar':
+                // console.log(respuestaBDD.bdd)
+                console.log('\n\tCliente Encontrado:\n\t', respuestaBDD.cliente);
+                console.log('\n');
+                return respuestaBDD;
+            case 'Borrar':
+                console.log('\nCliente Eliminado correctamente:\n', respuestaBDD.bdd.clientes);
+                console.log('\n');
+                return respuestaBDD;
+        }
+    });
+}
+function preguntarIdCliente(respuestaBDD) {
+    return rxjs
+        .from(inquirer.prompt(preguntasActulizarCliente))
+        .pipe(mergeMap(// RESP ANT OBS
+    function (respuesta) {
+        // console.log(respuesta);
+        var indiceCliente = respuestaBDD.bdd
+            .clientes
+            .findIndex(// -1
+        function (cliente) {
+            // console.log(cliente);
+            return cliente.id === respuesta.idCliente;
+        });
+        if (indiceCliente === -1) {
+            console.log('El id no exista, Intente nuevamente \n');
+            return preguntarIdCliente(respuestaBDD);
+        }
+        else {
+            respuestaBDD.indiceCliente = indiceCliente;
+            return rxjs
+                .from(inquirer.prompt(preguntaActualizarCliente))
+                .pipe(map(function (nombre) {
+                respuestaBDD.cliente = {
+                    id: null,
+                    nombre: nombre.nombre
+                };
+                return respuestaBDD;
+            }));
+        }
+    }));
+}
+function buscarClientePorNombre(respuestaBDD) {
+    return rxjs
+        .from(inquirer.prompt(preguntaBuscarNombreCliente))
+        .pipe(mergeMap(// RESP ANT OBS
+    function (respuesta) {
+        var clienteEncontrado = respuestaBDD.bdd.clientes
+            .find(function (cliente) {
+            return cliente.nombre === respuesta.nombre;
+        });
+        respuestaBDD.cliente = clienteEncontrado;
+        return rxjs.of(respuestaBDD);
+    }));
+}
+function eliminarPorNombre(respuestaBDD) {
+    return rxjs.from(inquirer.prompt(preguntaEliminarClientePorNombre))
+        .pipe(mergeMap(function (respuesta) {
+        var indiceDelNombre = respuestaBDD.bdd.clientes.findIndex(function (cliente) {
+            return cliente.nombre === respuesta.nombre;
+        });
+        console.log(indiceDelNombre);
+        var resultadoSplice = respuestaBDD.bdd.clientes.splice(indiceDelNombre, 1);
+        return rxjs.of(respuestaBDD);
+    }));
+}
+/*******************************************/
 main();

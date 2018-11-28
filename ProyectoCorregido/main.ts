@@ -1,15 +1,21 @@
-declare var Promise;
+import {tiposPeliculas} from "../Proyecto/opcionesMenu";
 
+declare var require;
+declare var Promise;
 const inquirer = require('inquirer');
 const fs = require('fs');
 const rxjs = require('rxjs');
-const mergeMap = require('rxjs/operators').mergeMap; //Recibira un observable
+const timer = require('rxjs').timer;
+const mergeMap = require('rxjs/operators').mergeMap;
 const map = require('rxjs/operators').map;
+
+////////////////////////////////////////////////////////RECURSOS///////////////////////////////////////
+const nombreDelArchivo = 'bdd.json';
 
 const preguntaMenu = {
     type: 'list',
     name: 'opcionMenu',
-    message: 'Que quieres hacer',
+    message: 'ESCOGA UNA OPCION ',
     choices: [
         'Crear',
         'Borrar',
@@ -18,279 +24,386 @@ const preguntaMenu = {
     ]
 };
 
-const preguntaUsuario = [
+/**********************Preguntas Cliente*******************************/
+const preguntasActulizarCliente = [
+    {
+        type: 'input',
+        name: 'idCliente',
+        message: 'Ingrese ID Cliente: ',
+    }
+];
+
+const preguntaEliminarClientePorNombre = [
+    {
+        type: 'input',
+        name: 'nombre',
+        message: '¿Cuál es el cliente que quiere eliminar? ',
+    }
+];
+
+const preguntaBuscarNombreCliente = [
+    {
+        type: 'input',
+        name: 'nombre',
+        message: 'Ingrese nombre del Cliente a Buscar: ',
+    }
+];
+
+const preguntaCliente = [
     {
         type: 'input',
         name: 'id',
-        message: 'Cual es tu id'
+        message: '¿Cual es tu id? '
     },
     {
         type: 'input',
         name: 'nombre',
-        message: 'Cual es tu nombre'
+        message: '¿Cual es tu nombre? '
     },
 ];
 
-const preguntaUsuarioBusquedaPorNombre = [
+const preguntaActualizarCliente = [
     {
         type: 'input',
         name: 'nombre',
-        message: 'Escribe el nombre del usuario a buscar'
-    }
+        message: 'Ingrese nombre del cliente: '
+    },
 ];
 
+/**********************Preguntas Pelicula*******************************/
+const preguntaActualizarPelicula = [
+    { type: 'input', name: 'precioPelicula', message: 'Ingrese el precio de la pelicula:' },
+    { type: 'list', name: 'tipoPelicula', message: 'Escoga la categoria:', choices: tiposPeliculas },
+    { type: 'input', name: 'actorPrincipal', message: 'Ingrese nombre del actor principal:'},
+    { type: 'input', name: 'añoLanzamiento', message: 'Ingrese el año de lanzamiento'},
+];
 
-const preguntaUsuarioNuevoNombre = [
+const preguntasRegistroPelicula = [
     {
         type: 'input',
-        name: 'nombre',
-        message: 'Escribe tu nuevo nombre'
-    }
+        name: 'idPelicula',
+        message: 'Ingrese id de la pelicula:',
+        validate: function (value) {
+            var valid = !isNaN(parseFloat(value));
+            return valid || '\n \t\tIngrese un Id valido debe ser numero\n';
+        },
+        filter: Number
+    },
+    { type: 'input', name: 'nombrePelicula', message: 'Ingrese el nombre de la pelicula:' },
+    { type: 'list', name: 'tipoPelicula', message: 'Escoga categoria:', choices: tiposPeliculas },
+    { type: 'input', name: 'actorPrincipal', message: 'Ingrese nombre del actor principal:'},
+    { type: 'input', name: 'añoLanzamiento', message: 'Ingrese el año de lanzamiento'},
+    { type: 'input', name: 'precioPelicula', message: 'Ingrese el precio de la Pelicula'},
 ];
 
-async function main() {
-    console.log('Empezo');
-    try {
-        await inicializarBase();
-        const respuesta = await inquirer.prompt(preguntaMenu);
-        switch (respuesta.opcionMenu) {
-            case 'Crear':
+const preguntaEliminarPelicula = [
+    { type: 'input', name: 'nombrePelicula', message: '¿Qué Pelicula desea borrar?' }];
 
-                const respuestaUsuario = await inquirer.prompt(preguntaUsuario);
-                await anadirUsuario(respuestaUsuario);
-                main();
-                break;
-
-            case 'Actualizar':
-
-                const respuestaUsuarioBusquedaPorNombre = await inquirer.prompt(preguntaUsuarioBusquedaPorNombre);
-
-                const existeUsuario = await buscarUsuarioPorNombre(respuestaUsuarioBusquedaPorNombre.nombre);
-
-                if (existeUsuario) {
-                    const respuestaNuevoNombre = await inquirer.prompt(preguntaUsuarioNuevoNombre);
-                    await editarUsuario(respuestaUsuarioBusquedaPorNombre.nombre, respuestaNuevoNombre.nombre);
-                } else {
-                    console.log('El usuario no existe');
-
-                    main();
-                    break;
-                }
+const preguntaBuscarPelicula = [
+    { type: 'input', name: 'nombrePelicula', message: '¿Qué pelicula desea buscar?' }];
 
 
-        }
-    } catch (e) {
-        console.log('Hubo un error');
-    }
-}
-
-function inicializarBase() {
-    /************* observable *************/
-        //rxjs.from  ---> para apsar prmesas a observables
-    const leerBDD$ = rxjs.from(leerBDD());
-    leerBDD$
-        .pipe(
-            mergeMap(
-                (respuestaLeerBDD) => {
-                }
-            )
-        )
-
-    /************* promesa *************/
-    /*
+/*************************** Base de Datos ***************************/
+function inicialiarBDD() {
     return new Promise(
         (resolve, reject) => {
-            fs.readFile('bdd.json', 'utf-8',
-                (err, contenido) => {
-                    if (err) {
-                        fs.writeFile('bdd.json',
-                            '{"usuarios":[],"mascotas":[]}',
-                            (err) => {
-                                if (err) {
-                                    reject({mensaje: 'Error'});
-                                }
-                                resolve({mensaje: 'ok'});
-                            });
-                    } else {
-                        resolve({mensaje: 'ok'});
-                    }
-                });
-        }
-    );
-    */
-}
-
-/**************************  PROMESAS  ***********************************/
-//Utilizacion de Promesa
-function leerBDD() {
-    return new Promise(
-        (resolve) => {
             fs.readFile(
-                'bdd.json',
+                nombreDelArchivo,
                 'utf-8',
-                (error, contenidoLeido) => {
+                (error, contenidoArchivo) => { // CALLBACK
                     if (error) {
-                        resolve({
-                            mensaje: 'Base de datos vacia',
-                            bdd: null
-                        });
+                        fs.writeFile(
+                            nombreDelArchivo,
+                            '{"clientes":[],"peliculas":[]}',
+                            (error) => {
+                                if (error) {
+                                    reject({
+                                        mensaje: 'ERROR AL CREAR BASE',
+                                        error: 500
+                                    })
+                                } else {
+                                    resolve({
+                                        mensaje: 'BDD LEÍDA',
+                                        bdd: JSON.parse('{"clientes":[],"peliculas":[]}')
+                                    })
+                                }
+
+                            }
+                        )
+
                     } else {
                         resolve({
-                            mensaje: 'Si existe la Base',
-                            bdd: JSON.parse(contenidoLeido)
-                        });
+                            mensaje: 'BDD LEÍDA',
+                            bdd: JSON.parse(contenidoArchivo)
+                        })
                     }
-
                 }
-            );
+            )
         }
     );
 }
 
-//Utilizacion de promesa
-function crearBDD() {
-    const contenidoInicialBDD = '{"usuarios":[],"mascotas":[]}';
+/***************************** OperacionesCRUD **************************/
+
+function main() {
+    const respuestaBDD$ = rxjs.from(inicialiarBDD());
+    respuestaBDD$
+        .pipe(
+            preguntarOpcionesMenu(),
+            opcionesRespuesta(),
+            ejecutarAcccion(),
+            guardarBaseDeDatos()
+        )
+        .subscribe(
+            (data) => {
+                // console.log(data);
+            },
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                main();
+                // console.log('Complete');
+            }
+        )
+}
+
+function guardarBDD(bdd: BDD) {
     return new Promise(
         (resolve, reject) => {
             fs.writeFile(
-                'bdd.json',
-                contenidoInicialBDD,
-                (err) => {
-                    if (err) {
+                nombreDelArchivo,
+                JSON.stringify(bdd),
+                (error) => {
+                    if (error) {
                         reject({
-                            mensaje: 'Error creando Base',
+                            mensaje: 'Error creando',
                             error: 500
-                        });
+                        })
                     } else {
                         resolve({
-                            mensaje: 'BDD creada'
-                        });
+                            mensaje: 'BDD guardada',
+                            bdd: bdd
+                        })
                     }
 
                 }
             )
-
         }
     )
 }
 
-/**************************  OBSERVABLE  ***********************************/
+function preguntarOpcionesMenu() {
+    return mergeMap( // Respuesta Anterior Observable
+        (respuestaBDD: RespuestaBDD) => {
+            return rxjs
+                .from(inquirer.prompt(preguntaMenu))
+                .pipe(
+                    map( // respuesta ant obs
+                        (respuesta: OpcionMenu) => {
+                            respuestaBDD.opcionMenu = respuesta;
+                            return respuestaBDD
+                        }
+                    )
+                );
+        }
+    )
+}
 
 
 
-function anadirUsuario(usuario) {
-    return new Promise(
-        (resolve, reject) => {
-            fs.readFile('bdd.json', 'utf-8',
-                (err, contenido) => {
-                    if (err) {
-                        reject({mensaje: 'Error leyendo'});
-                    } else {
-                        const bdd = JSON.parse(contenido);
 
 
-                        bdd.usuarios.push(usuario);
 
-
-                        fs.writeFile(
-                            'bdd.json',
-                            JSON.stringify(bdd),
-                            (err) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    resolve({mensaje: 'Usuario Creado'});
+function opcionesRespuesta() {
+    return mergeMap(
+        (respuestaBDD: RespuestaBDD) => {
+            const opcion = respuestaBDD.opcionMenu.opcionMenu;
+            switch (opcion) {
+                case 'Crear':
+                    return rxjs
+                        .from(inquirer.prompt(preguntaCliente))
+                        .pipe(
+                            map(
+                                (cliente: Cliente) => { // resp ant OBS
+                                    respuestaBDD.cliente = cliente;
+                                    return respuestaBDD;
                                 }
+                            )
+                        );
+                case 'Buscar':
+                    return buscarClientePorNombre(respuestaBDD);
+                    break;
+                case 'Actualizar':
+                    return preguntarIdCliente(respuestaBDD);
+                case 'Borrar':
+                    return eliminarPorNombre(respuestaBDD);
+                    break;
+            }
+        }
+    )
+}
+
+function guardarBaseDeDatos() {
+    return mergeMap(// Respuesta del anterior OBS
+        (respuestaBDD: RespuestaBDD) => {
+            // console.log(respuestaBDD.bdd);
+            return rxjs.from(guardarBDD(respuestaBDD.bdd))
+        }
+    )
+}
+
+function ejecutarAcccion() {
+    return map( // Respuesta del anterior OBS
+        (respuestaBDD: RespuestaBDD) => {
+            const opcion = respuestaBDD.opcionMenu.opcionMenu;
+            switch (opcion) {
+                case 'Crear':
+                    const cliente:Cliente = respuestaBDD.cliente;
+                    /*******************************************************************************>>>>>>>>>>*/
+                    // console.log(respuestaBDD.bdd.clientes);
+                    respuestaBDD.bdd.clientes.push(cliente);
+                    console.log('\n\tCliente registrado exitoxamente\n')
+                    return respuestaBDD;
+                case 'Actualizar':
+                    const indice = respuestaBDD.indiceCliente;
+                    respuestaBDD.bdd.clientes[indice].nombre = respuestaBDD.cliente.nombre;
+                    console.log('\n\tCliente actualizado exitoxamente\n', respuestaBDD.bdd.clientes[indice].nombre)
+                    console.log('\n');
+                    return respuestaBDD;
+                case 'Buscar':
+                    // console.log(respuestaBDD.bdd)
+                    console.log('\n\tCliente Encontrado:\n\t',respuestaBDD.cliente);
+                    console.log('\n');
+                    return respuestaBDD;
+                case 'Borrar':
+                    console.log('\nCliente Eliminado correctamente:\n', respuestaBDD.bdd.clientes);
+                    console.log('\n');
+                    return respuestaBDD;
+            }
+        }
+    )
+}
+
+function preguntarIdCliente(respuestaBDD: RespuestaBDD) {
+    return rxjs
+        .from(inquirer.prompt(preguntasActulizarCliente))
+        .pipe(
+            mergeMap( // RESP ANT OBS
+                (respuesta: BuscarClientePorId) => {
+                    // console.log(respuesta);
+                    const indiceCliente = respuestaBDD.bdd
+                        .clientes
+                        .findIndex( // -1
+                            (cliente: Cliente) => {
+                                // console.log(cliente);
+                                return cliente.id === respuesta.idCliente
                             }
                         );
+                    if (indiceCliente === -1) {
+                        console.log('El id no exista, Intente nuevamente \n');
+                        return preguntarIdCliente(respuestaBDD);
+                    } else {
+                        respuestaBDD.indiceCliente = indiceCliente;
+                        return rxjs
+                            .from(inquirer.prompt(preguntaActualizarCliente))
+                            .pipe(
+                                map(
+                                    (nombre:{nombre:string})=>{
+                                        respuestaBDD.cliente ={
+                                            id:null,
+                                            nombre:nombre.nombre
+                                        };
+                                        return respuestaBDD;
+                                    }
+                                )
+                            );
                     }
-                });
-        }
-    );
+                }
+            )
+        );
 }
 
-function editarUsuario(nombre, nuevoNombre) {
-    return new Promise(
-        (resolve, reject) => {
-            fs.readFile('bdd.json', 'utf-8',
-                (err, contenido) => {
-                    if (err) {
-                        reject({mensaje: 'Error leyendo'});
-                    } else {
-                        const bdd = JSON.parse(contenido);
-
-
-                        const indiceUsuario = bdd.usuarios
-                            .findIndex(
-                                (usuario) => {
-                                    return usuario.nombre = nombre;
-                                }
-                            );
-
-                        bdd.usuarios[indiceUsuario].nombre = nuevoNombre;
-
-
-                        fs.writeFile(
-                            'bdd.json',
-                            JSON.stringify(bdd),
-                            (err) => {
-                                if (err) {
-                                    reject(err);
-                                } else {
-                                    resolve({mensaje: 'Usuario Editado'});
-                                }
+function buscarClientePorNombre(respuestaBDD: RespuestaBDD) {
+    return rxjs
+        .from(inquirer.prompt(preguntaBuscarNombreCliente))
+        .pipe(
+            mergeMap( // RESP ANT OBS
+                (respuesta: BuscarClientePorNombre) => {
+                    const clienteEncontrado = respuestaBDD.bdd.clientes
+                        .find(
+                            (cliente)=>{
+                                return cliente.nombre === respuesta.nombre;
                             }
-                        );
-                    }
-                });
-        }
-    );
+                        )
+                    respuestaBDD.cliente = clienteEncontrado;
+                    return rxjs.of(respuestaBDD);
+                }
+            )
+        );
 }
 
-function buscarUsuarioPorNombre(nombre) {
-    return new Promise(
-        (resolve, reject) => {
-            fs.readFile('bdd.json', 'utf-8',
-                (err, contenido) => {
-                    if (err) {
-                        reject({mensaje: 'Error leyendo'});
-                    } else {
-                        const bdd = JSON.parse(contenido);
+function eliminarPorNombre(respuestaBDD: RespuestaBDD) {
+    return rxjs.from(inquirer.prompt(preguntaEliminarClientePorNombre))
+        .pipe(
+            mergeMap(
+                (respuesta: EliminarClientePorNombre)=>{
+                    const indiceDelNombre = respuestaBDD.bdd.clientes.findIndex((cliente)=>{
+                        return cliente.nombre === respuesta.nombre;
+                    });
+                    console.log(indiceDelNombre)
+                    const resultadoSplice = respuestaBDD.bdd.clientes.splice(indiceDelNombre,1);
+                    return rxjs.of(respuestaBDD);
+                }
+            )
+        )
 
-                        const respuestaFind = bdd.usuarios
-                            .find(
-                                (usuario) => {
-                                    return usuario.nombre === nombre;
-                                }
-                            );
-
-                        resolve(respuestaFind);
-                    }
-                });
-        }
-    );
 }
+
+/************************** Interfaces ******************************/
+interface RespuestaBDD {
+    mensaje: string;
+    bdd: BDD;
+    opcionMenu?: OpcionMenu;
+    cliente?: Cliente;
+    indiceCliente: number;
+}
+
+interface BDD {
+    clientes: Cliente[] | any;
+    peliculas: Pelicula[];
+}
+
+interface Cliente {
+    id: number;
+    nombre: string;
+}
+
+interface Pelicula {
+    idPelicula:number,
+    nombrePelicula:string,
+    tipoPelicula:string,
+    actorPrincipal:string,
+    añoLanzamiento:number,
+    precioPelicula:string,
+    idCliente:number
+}
+interface OpcionMenu {
+    opcionMenu: 'Crear' | 'Borrar' | 'Buscar' | 'Actualizar';
+}
+
+interface BuscarClientePorId {
+    idCliente: number;
+}
+
+interface BuscarClientePorNombre {
+    nombre: string;
+}
+
+interface EliminarClientePorNombre {
+    nombre: string;
+}
+
+/*******************************************/
 
 main();
-
-
-interface RespuestaBDD {
-    mensaje: string,
-    bdd: BaseDeDatos
-}
-
-interface BaseDeDatos {
-    usuarios: Usuario[];
-    mascotas: Mascota[];
-}
-
-interface Usuario {
-    id: number;
-    nombre: string;
-}
-
-interface Mascota {
-    id: number;
-    nombre: string;
-    idUsuario: number;
-}

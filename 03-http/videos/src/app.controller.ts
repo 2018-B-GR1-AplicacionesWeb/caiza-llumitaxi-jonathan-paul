@@ -135,3 +135,6 @@ export class AppController { // Export en otros archivos importar a esta clase
 export interface Usuario {
     nombre:string;
 }
+
+
+// >npm run start:dev
