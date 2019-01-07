@@ -54,38 +54,50 @@ export class NoticiaService{
 
     }
 
-    eliminar(idNoticia: number): Noticia{
-        const indiceNoticia = this.arreglo
-            .findIndex(
-                (noticia)=>{
-                    return noticia.id == idNoticia;
-                }
-            )
-        const registroEliminado = JSON.parse(JSON.stringify(this.arreglo[indiceNoticia]));
-        this.arreglo.splice(indiceNoticia,1);
-        return registroEliminado;
+    eliminar(idNoticia: number): Promise<NoticiaEntity>{
+        // const indiceNoticia = this.arreglo
+        //     .findIndex(
+        //         (noticia)=>{
+        //             return noticia.id == idNoticia;
+        //         }
+        //     )
+        // const registroEliminado = JSON.parse(JSON.stringify(this.arreglo[indiceNoticia]));
+        // this.arreglo.splice(indiceNoticia,1);
+        // return registroEliminado;
+        const noticiaEliminar: NoticiaEntity = this._noticiaRepository.create({
+            id: idNoticia
+        });
+
+        return this._noticiaRepository.remove(noticiaEliminar);
     }
 
-    actulizar(idNoticia: number, nuevaNoticia: Noticia){
-        const indiceNoticia = this.arreglo
-            .findIndex(
-                (noticia)=>{
-                    return noticia.id == idNoticia;
-                }
-            )
-        // this.arreglo[indiceNoticia].titulo =
-        this.arreglo[indiceNoticia] = nuevaNoticia;
-        return this.arreglo[indiceNoticia];
+    actulizar(nuevaNoticia: Noticia): Promise<NoticiaEntity>{
+        // const indiceNoticia = this.arreglo
+        //     .findIndex(
+        //         (noticia)=>{
+        //             return noticia.id == idNoticia;
+        //         }
+        //     )
+        // // this.arreglo[indiceNoticia].titulo =
+        // this.arreglo[indiceNoticia] = nuevaNoticia;
+        // return this.arreglo[indiceNoticia];
+
+        const noticiaEntity: NoticiaEntity = this._noticiaRepository.create(nuevaNoticia);
+        //El metodo save guarda en la DDB
+        return this._noticiaRepository.save(noticiaEntity);
+
     }
 
-    buscarPorId(idNoticia: number):Noticia{
-        const indiceNoticia = this.arreglo
-            .findIndex(
-                (noticia)=>{
-                    return noticia.id === idNoticia;
-                }
-            )
-        return this.arreglo[indiceNoticia];
+    buscarPorId(idNoticia: number):Promise<NoticiaEntity>{
+        // const indiceNoticia = this.arreglo
+        //     .findIndex(
+        //         (noticia)=>{
+        //             return noticia.id === idNoticia;
+        //         }
+        //     )
+        // return this.arreglo[indiceNoticia];
+
+        return this._noticiaRepository.findOne(idNoticia);
     }
 
 }

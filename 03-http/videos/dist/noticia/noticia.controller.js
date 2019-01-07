@@ -53,9 +53,12 @@ let NoticiaController = class NoticiaController {
         console.log(text);
     }
     eliminar(response, ideNoticia) {
-        const noticiaBorrada = this._noticiaService.eliminar(Number(ideNoticia));
-        const parametroConsulta = `?accion=borrar&titulo=${noticiaBorrada.titulo}`;
-        response.redirect('/noticia/inicio' + parametroConsulta);
+        return __awaiter(this, void 0, void 0, function* () {
+            const noticia = yield this._noticiaService.buscarPorId(+ideNoticia);
+            yield this._noticiaService.eliminar(Number(ideNoticia));
+            const parametroConsulta = `?accion=borrar&titulo=${noticia.titulo}`;
+            response.redirect('/noticia/inicio' + parametroConsulta);
+        });
     }
     crearNoticia(response) {
         response.render('crear-noticia');
@@ -67,16 +70,20 @@ let NoticiaController = class NoticiaController {
         });
     }
     actualizarNoticiaVista(response, idNoticia) {
-        const noticiaEncontrada = this._noticiaService.buscarPorId(+idNoticia);
-        response.render('crear-noticia', {
-            noticia: noticiaEncontrada
+        return __awaiter(this, void 0, void 0, function* () {
+            const noticiaEncontrada = yield this._noticiaService
+                .buscarPorId(+idNoticia);
+            response.render('crear-noticia', {
+                noticia: noticiaEncontrada
+            });
         });
     }
     actualizarNoticiaMetodo(response, idNoticia, noticia) {
-        noticia.id = +idNoticia;
-        const noticiaActualizada = this._noticiaService.actulizar(+idNoticia, noticia);
-        const parametroConsulta = `?accion=actualizar&titulo=${noticiaActualizada.titulo}`;
-        response.redirect('/noticia/inicio' + parametroConsulta);
+        return __awaiter(this, void 0, void 0, function* () {
+            noticia.id = +idNoticia;
+            yield this._noticiaService.actulizar(noticia);
+            response.redirect('/noticia/inicio');
+        });
     }
 };
 __decorate([
@@ -103,7 +110,7 @@ __decorate([
     __param(1, common_1.Param('idNoticia')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], NoticiaController.prototype, "eliminar", null);
 __decorate([
     common_1.Get('crear-noticia'),
@@ -126,7 +133,7 @@ __decorate([
     __param(1, common_1.Param('idNoticia')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], NoticiaController.prototype, "actualizarNoticiaVista", null);
 __decorate([
     common_1.Post('actualizar-noticia/:idNoticia'),
@@ -135,7 +142,7 @@ __decorate([
     __param(2, common_1.Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], NoticiaController.prototype, "actualizarNoticiaMetodo", null);
 NoticiaController = __decorate([
     common_1.Controller('noticia'),

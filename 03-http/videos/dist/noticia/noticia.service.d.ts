@@ -8,7 +8,7 @@ export declare class NoticiaService {
     constructor(_noticiaRepository: Repository<NoticiaEntity>);
     buscar(parametrosBusqueda?: FindManyOptions<NoticiaEntity>): Promise<NoticiaEntity[]>;
     crear(noticia: Noticia): Promise<NoticiaEntity>;
-    eliminar(idNoticia: number): Noticia;
-    actulizar(idNoticia: number, nuevaNoticia: Noticia): Noticia;
-    buscarPorId(idNoticia: number): Noticia;
+    eliminar(idNoticia: number): Promise<NoticiaEntity>;
+    actulizar(nuevaNoticia: Noticia): Promise<NoticiaEntity>;
+    buscarPorId(idNoticia: number): Promise<NoticiaEntity>;
 }

@@ -56,13 +56,13 @@ export class NoticiaController{
     }
 
     @Post('eliminar/:idNoticia')
-    eliminar(
+    async eliminar(
         @Res() response,
         @Param('idNoticia') ideNoticia:string,
     ){
-
-        const noticiaBorrada = this._noticiaService.eliminar(Number(ideNoticia));
-        const parametroConsulta = `?accion=borrar&titulo=${noticiaBorrada.titulo}`;
+        const noticia = await this._noticiaService.buscarPorId(+ideNoticia);
+        await this._noticiaService.eliminar(Number(ideNoticia));
+        const parametroConsulta = `?accion=borrar&titulo=${noticia.titulo}`;
         response.redirect('/noticia/inicio'+parametroConsulta);
     }
 
@@ -90,13 +90,15 @@ export class NoticiaController{
     }
 
     @Get('actualizar-noticia/:idNoticia')
-    actualizarNoticiaVista(
+    async actualizarNoticiaVista(
         @Res() response,
         @Param('idNoticia') idNoticia: string
     ){
         //El "+" le transforma en numero a un string
         //Numerico
-        const noticiaEncontrada = this._noticiaService.buscarPorId(+idNoticia)
+        // const noticiaEncontrada = this._noticiaService.buscarPorId(+idNoticia)
+        const noticiaEncontrada = await this._noticiaService
+            .buscarPorId(+idNoticia);
         response.render(
             'crear-noticia',
             {
@@ -106,15 +108,16 @@ export class NoticiaController{
     }
 
     @Post('actualizar-noticia/:idNoticia')
-    actualizarNoticiaMetodo(
+    async actualizarNoticiaMetodo(
         @Res() response,
         @Param('idNoticia') idNoticia: string,
         @Body () noticia: Noticia
     ) {
         noticia.id = +idNoticia
-        const noticiaActualizada = this._noticiaService.actulizar(+idNoticia, noticia);
-        const parametroConsulta = `?accion=actualizar&titulo=${noticiaActualizada.titulo}`;
-        response.redirect('/noticia/inicio'+parametroConsulta);
+        // const noticiaActualizada = this._noticiaService.actulizar(+idNoticia, noticia);
+        // const parametroConsulta = `?accion=actualizar&titulo=${noticiaActualizada.titulo}`;
+        await this._noticiaService.actulizar(noticia);
+        response.redirect('/noticia/inicio');
         // response.redirect(
         //     '/inicio'
         // )

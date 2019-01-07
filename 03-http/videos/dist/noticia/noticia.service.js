@@ -51,28 +51,17 @@ let NoticiaService = class NoticiaService {
         return this._noticiaRepository.save(noticiaEntity);
     }
     eliminar(idNoticia) {
-        const indiceNoticia = this.arreglo
-            .findIndex((noticia) => {
-            return noticia.id == idNoticia;
+        const noticiaEliminar = this._noticiaRepository.create({
+            id: idNoticia
         });
-        const registroEliminado = JSON.parse(JSON.stringify(this.arreglo[indiceNoticia]));
-        this.arreglo.splice(indiceNoticia, 1);
-        return registroEliminado;
+        return this._noticiaRepository.remove(noticiaEliminar);
     }
-    actulizar(idNoticia, nuevaNoticia) {
-        const indiceNoticia = this.arreglo
-            .findIndex((noticia) => {
-            return noticia.id == idNoticia;
-        });
-        this.arreglo[indiceNoticia] = nuevaNoticia;
-        return this.arreglo[indiceNoticia];
+    actulizar(nuevaNoticia) {
+        const noticiaEntity = this._noticiaRepository.create(nuevaNoticia);
+        return this._noticiaRepository.save(noticiaEntity);
     }
     buscarPorId(idNoticia) {
-        const indiceNoticia = this.arreglo
-            .findIndex((noticia) => {
-            return noticia.id === idNoticia;
-        });
-        return this.arreglo[indiceNoticia];
+        return this._noticiaRepository.findOne(idNoticia);
     }
 };
 NoticiaService = __decorate([
