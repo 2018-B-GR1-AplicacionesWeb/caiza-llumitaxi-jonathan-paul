@@ -14,7 +14,7 @@ import {
 import { AppService } from './app.service';
 import {Observable, of} from "rxjs";
 import {Request, Response} from 'express'
-import {NoticiaService} from "./noticia.service";
+import {NoticiaService} from "./noticia/noticia.service";
 import stringMatching = jasmine.stringMatching;
 
 // Un controlador solo sirve para recivir y responder una peticion
@@ -135,98 +135,7 @@ export class AppController { // Export en otros archivos importar a esta clase
   //       }
   //   }
 
-    @Get('inicio')
-    inicio(
-        @Res() response,
-        @Query('accion') accion:string,
-        @Query('titulo') titulo: string
-    ) {
-        let mensaje = undefined;
-        if(accion && titulo){
-            switch (accion) {
-                case 'borrar':
-                    mensaje = `Registro ${titulo} eliminado`;
-                case 'actualizar':
-                    mensaje = `Registro ${titulo} actualizado`;
-                case 'crear':
-                    mensaje = `Registro ${titulo} creado`;
-            }
-            console.log(mensaje)
-        }
-        response.render(
-            'inicio',
-            {
-                usuario:'Jonathan',
-                arreglo: this._noticiaService.arreglo,
-                booleano: false,
-                mensaje: mensaje
-            }
-        );
-    }
 
-    @Post('eliminar/:idNoticia')
-    eliminar(
-        @Res() response,
-        @Param('idNoticia') ideNoticia:string,
-    ){
-
-        const noticiaBorrada = this._noticiaService.eliminar(Number(ideNoticia));
-        const parametroConsulta = `?accion=borrar&titulo=${noticiaBorrada.titulo}`;
-        response.redirect('/inicio'+parametroConsulta);
-    }
-
-    @Get('crear-noticia')
-    crearNoticia(
-        @Res() response,
-    ){
-        response.render(
-            'crear-noticia'
-        )
-    }
-
-    @Post('crear-noticia')
-    crearNoticiaFuncion(
-        @Res() response,
-        @Body() noticia:Noticia
-    ){
-        const noticiaCreada = this._noticiaService.crear(noticia);
-        const parametroConsulta = `?accion=crear&titulo=${noticiaCreada.titulo}`;
-        response.redirect('/inicio'+parametroConsulta);
-        // response.redirect(
-        //     '/inicio'
-        // )
-    }
-
-    @Get('actualizar-noticia/:idNoticia')
-    actualizarNoticiaVista(
-       @Res() response,
-       @Param('idNoticia') idNoticia: string
-    ){
-        //El "+" le transforma en numero a un string
-        //Numerico
-        const noticiaEncontrada = this._noticiaService.buscarPorId(+idNoticia)
-        response.render(
-            'crear-noticia',
-            {
-                noticia: noticiaEncontrada
-            }
-        )
-    }
-
-    @Post('actualizar-noticia/:idNoticia')
-    actualizarNoticiaMetodo(
-        @Res() response,
-        @Param('idNoticia') idNoticia: string,
-        @Body () noticia: Noticia
-    ) {
-        noticia.id = +idNoticia
-        const noticiaActualizada = this._noticiaService.actulizar(+idNoticia, noticia);
-        const parametroConsulta = `?accion=actualizar&titulo=${noticiaActualizada.titulo}`;
-        response.redirect('/inicio'+parametroConsulta);
-        // response.redirect(
-        //     '/inicio'
-        // )
-    }
 
 }
 

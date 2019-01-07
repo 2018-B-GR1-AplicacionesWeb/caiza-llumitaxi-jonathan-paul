@@ -9,19 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
-const noticia_service_1 = require("./noticia/noticia.service");
-let AppController = class AppController {
-    constructor(_servicio, _noticiaService) {
-        this._servicio = _servicio;
-        this._noticiaService = _noticiaService;
-    }
+const typeorm_1 = require("typeorm");
+let NoticiaEntity = class NoticiaEntity {
 };
-AppController = __decorate([
-    common_1.Controller(),
-    __metadata("design:paramtypes", [app_service_1.AppService,
-        noticia_service_1.NoticiaService])
-], AppController);
-exports.AppController = AppController;
-//# sourceMappingURL=app.controller.js.map
+__decorate([
+    typeorm_1.PrimaryGeneratedColumn(),
+    __metadata("design:type", Number)
+], NoticiaEntity.prototype, "id", void 0);
+__decorate([
+    typeorm_1.Index(),
+    typeorm_1.Column({
+        name: 'titulo_noticia',
+        type: 'varchar',
+        length: 50
+    }),
+    __metadata("design:type", String)
+], NoticiaEntity.prototype, "titulo", void 0);
+__decorate([
+    typeorm_1.Column({
+        name: 'descripcion_noticia',
+        type: 'text',
+        nullable: true
+    }),
+    __metadata("design:type", String)
+], NoticiaEntity.prototype, "descripcion", void 0);
+NoticiaEntity = __decorate([
+    typeorm_1.Entity('noticia')
+], NoticiaEntity);
+exports.NoticiaEntity = NoticiaEntity;
+//# sourceMappingURL=noticia-entity.js.map

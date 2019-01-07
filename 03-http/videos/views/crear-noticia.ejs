@@ -6,7 +6,7 @@
 <h1> <%= estaCreando === "undefined"?'Crear':'Actualizar'%> noticia</h1>
 <p><%= estaCreando === "undefined"?'Crear':'Actualizar'%> una noticia</p>
 
-<form action="/<%= estaCreando ? 'crear':'actualizar'%>-noticia/<%= estaCreando ? '':noticia.id%>" method="POST">
+<form action="/noticia/<%= estaCreando ? 'crear':'actualizar'%>-noticia/<%= estaCreando ? '':noticia.id%>" method="POST">
     <div>
         <label for="titulo">Titulo</label>
         <input id="titulo"
@@ -24,6 +24,6 @@
 
 </form>
 
-<a href="/inicio">
+<a href="/noticia/inicio">
     <button>Regresar</button>
 </a>

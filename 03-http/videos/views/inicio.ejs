@@ -27,13 +27,13 @@
 <!--<ul>-->
 <!-- a->ancla -->
 
-<form action="/inicio" method="get">
+<form action="/noticia/inicio" method="get">
     <label for="busqueda">Busqueda</label>
     <input id="busquedaId" type="text">
     <button>Buscar</button>
 </form>
 
-<a href="/crear-noticia">
+<a href="/noticia/crear-noticia">
     <button>Crear Noticia</button>
 </a>
 
@@ -70,12 +70,12 @@
             <td><%= noticia.titulo %></td>
             <td><%= noticia.descripcion %></td>
             <td>
-                <form action="/eliminar/<%= noticia.id%>" method="POST">
+                <form action="/noticia/eliminar/<%= noticia.id%>" method="POST">
                     <!--<button type="button"> clickea sin problemas</button>-->
                     <!--<button>Yo tambien envio informacion</button>-->
                     <button type="submit"> Eliminar</button>
                 </form>
-                <a href="/actualizar-noticia/<%= noticia.id %>">
+                <a href="/noticia/actualizar-noticia/<%= noticia.id %>">
                     <button>Actualizar Noticia</button>
                 </a>
             </td>

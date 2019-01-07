@@ -9,19 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
-const noticia_service_1 = require("./noticia/noticia.service");
-let AppController = class AppController {
-    constructor(_servicio, _noticiaService) {
-        this._servicio = _servicio;
-        this._noticiaService = _noticiaService;
-    }
-};
-AppController = __decorate([
-    common_1.Controller(),
-    __metadata("design:paramtypes", [app_service_1.AppService,
-        noticia_service_1.NoticiaService])
-], AppController);
-exports.AppController = AppController;
-//# sourceMappingURL=app.controller.js.map
+const typeorm_1 = require("typeorm");
+class NoticiaEntity {
+}
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], NoticiaEntity.prototype, "titulo", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", String)
+], NoticiaEntity.prototype, "descripcion", void 0);
+exports.NoticiaEntity = NoticiaEntity;
+//# sourceMappingURL=noticia-entity.js.map

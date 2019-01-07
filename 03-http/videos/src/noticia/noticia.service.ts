@@ -1,5 +1,9 @@
-import {Injectable} from "@nestjs/common";
-import {Noticia} from "./app.controller";
+import {Inject, Injectable} from "@nestjs/common";
+import {Noticia} from "../app.controller";
+import {NoticiaEntity} from "./noticia-entity";
+import {FindManyOptions, Repository} from "typeorm";
+import {InjectRepository} from "@nestjs/typeorm";
+
 
 @Injectable()
 export class NoticiaService{
@@ -27,11 +31,27 @@ export class NoticiaService{
     ]
     numeroRegistro = 5;
 
-    crear(noticia:Noticia): Noticia{
-        noticia.id = this.numeroRegistro;
-        this.numeroRegistro++;
-        this.arreglo.push(noticia);
-        return noticia;
+    constructor(
+      @InjectRepository(NoticiaEntity)
+      private readonly _noticiaRepository:Repository<NoticiaEntity>
+    ){}
+
+    buscar(parametrosBusqueda?: FindManyOptions<NoticiaEntity>)
+        :Promise<NoticiaEntity[]>{
+            return this._noticiaRepository.find(parametrosBusqueda);
+    }
+
+    crear(noticia:Noticia):Promise<NoticiaEntity>{
+        // noticia.id = this.numeroRegistro;
+        // this.numeroRegistro++;
+        // this.arreglo.push(noticia);
+        // return noticia;
+
+        // el Create es como un cosntructor de la entidad
+        const noticiaEntity: NoticiaEntity = this._noticiaRepository.create(noticia);
+        //El metodo save guarda en la DDB
+        return this._noticiaRepository.save(noticiaEntity);
+
     }
 
     eliminar(idNoticia: number): Noticia{
