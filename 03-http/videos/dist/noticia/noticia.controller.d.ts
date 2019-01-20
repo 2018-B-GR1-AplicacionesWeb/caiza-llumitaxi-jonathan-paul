@@ -3,7 +3,7 @@ import { NoticiaService } from "./noticia.service";
 export declare class NoticiaController {
     private readonly _noticiaService;
     constructor(_noticiaService: NoticiaService);
-    inicio(response: any, accion: string, titulo: string, text: any): Promise<void>;
+    inicio(response: any, busqueda: string, accion: string, titulo: string, text: any): Promise<void>;
     inicioPOST(response: any, text: any): void;
     eliminar(response: any, ideNoticia: string): Promise<void>;
     crearNoticia(response: any): void;

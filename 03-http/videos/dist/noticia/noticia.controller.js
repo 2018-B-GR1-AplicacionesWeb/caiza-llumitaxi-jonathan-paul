@@ -22,11 +22,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const noticia_service_1 = require("./noticia.service");
+const typeorm_1 = require("typeorm");
 let NoticiaController = class NoticiaController {
     constructor(_noticiaService) {
         this._noticiaService = _noticiaService;
     }
-    inicio(response, accion, titulo, text) {
+    inicio(response, busqueda, accion, titulo, text) {
         return __awaiter(this, void 0, void 0, function* () {
             let mensaje = undefined;
             if (accion && titulo) {
@@ -37,10 +38,28 @@ let NoticiaController = class NoticiaController {
                         mensaje = `Registro ${titulo} actualizado`;
                     case 'crear':
                         mensaje = `Registro ${titulo} creado`;
+                    case 'buscar':
+                        mensaje = `Registro ${titulo} creado`;
                 }
             }
             console.log(text);
-            const noticias = yield this._noticiaService.buscar();
+            let noticias;
+            if (busqueda) {
+                const consulta = {
+                    where: [
+                        {
+                            titulo: typeorm_1.Like(`%${busqueda}%`)
+                        },
+                        {
+                            descripcion: typeorm_1.Like(`%${busqueda}%`)
+                        }
+                    ]
+                };
+                noticias = yield yield this._noticiaService.buscar(consulta);
+            }
+            else {
+                noticias = yield this._noticiaService.buscar();
+            }
             response.render('inicio', {
                 usuario: 'Jonathan',
                 arreglo: noticias,
@@ -89,11 +108,12 @@ let NoticiaController = class NoticiaController {
 __decorate([
     common_1.Get('inicio'),
     __param(0, common_1.Res()),
-    __param(1, common_1.Query('accion')),
-    __param(2, common_1.Query('titulo')),
-    __param(3, common_1.Body()),
+    __param(1, common_1.Query('busqueda')),
+    __param(2, common_1.Query('accion')),
+    __param(3, common_1.Query('titulo')),
+    __param(4, common_1.Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, String, Object]),
+    __metadata("design:paramtypes", [Object, String, String, String, Object]),
     __metadata("design:returntype", Promise)
 ], NoticiaController.prototype, "inicio", null);
 __decorate([

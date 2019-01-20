@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@nestjs/common";
 import {Noticia} from "../app.controller";
-import {NoticiaEntity} from "./noticia-entity";
+import {NoticiaEntity} from "./noticia.entity";
 import {FindManyOptions, Repository} from "typeorm";
 import {InjectRepository} from "@nestjs/typeorm";
 

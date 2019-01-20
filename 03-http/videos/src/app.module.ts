@@ -3,25 +3,33 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {NoticiaService} from "./noticia/noticia.service";
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {NoticiaEntity} from "./noticia/noticia-entity";
+import {NoticiaEntity} from "./noticia/noticia.entity";
 import {NoticiaModule} from "./noticia/noticia.module";
+import {ArticuloEntity} from "./articulo/articulo.entity";
+import {PaginaEntity} from "./pagina/pagina.entity";
+import {UsuarioEntity} from "./usuario/usuario.entity";
+import {UsuarioModule} from "./usuario/usuario.module";
 
 @Module({
         imports: [
             TypeOrmModule.forRoot({
                 type: 'mysql',
                 host: '192.168.99.100',
-                port: 32771,
+                port: 32769,
                 username: 'jonathan',
                 password: '12345678',
                 database: 'web',
                 synchronize: true,
-                dropSchema: true,
+                dropSchema: false,
                 entities: [
-                    NoticiaEntity
+                    NoticiaEntity,
+                    PaginaEntity,
+                    ArticuloEntity,
+                    UsuarioEntity
                 ]
             }),
             NoticiaModule,
+            UsuarioModule
         ],  //Van los modulos
   controllers: [
       AppController
@@ -31,3 +39,5 @@ import {NoticiaModule} from "./noticia/noticia.module";
   ],      // Van los Servicios
 })
 export class AppModule {}
+
+

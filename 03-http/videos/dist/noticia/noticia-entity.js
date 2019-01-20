@@ -10,7 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
+const pagina_entity_1 = require("../pagina/pagina.entity");
 let NoticiaEntity = class NoticiaEntity {
+    primerConsole() {
+        console.log(`Esta es el primer console`);
+    }
+    segundoConsole() {
+        console.log(`El titulo es ${this.titulo}`);
+    }
 };
 __decorate([
     typeorm_1.PrimaryGeneratedColumn(),
@@ -33,6 +40,22 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], NoticiaEntity.prototype, "descripcion", void 0);
+__decorate([
+    typeorm_1.OneToMany(type => pagina_entity_1.PaginaEntity, pagina => pagina.noticias),
+    __metadata("design:type", Array)
+], NoticiaEntity.prototype, "paginas", void 0);
+__decorate([
+    typeorm_1.BeforeInsert(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], NoticiaEntity.prototype, "primerConsole", null);
+__decorate([
+    typeorm_1.BeforeInsert(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], NoticiaEntity.prototype, "segundoConsole", null);
 NoticiaEntity = __decorate([
     typeorm_1.Entity('noticia')
 ], NoticiaEntity);

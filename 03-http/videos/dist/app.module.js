@@ -10,8 +10,12 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const typeorm_1 = require("@nestjs/typeorm");
-const noticia_entity_1 = require("./noticia/noticia-entity");
+const noticia_entity_1 = require("./noticia/noticia.entity");
 const noticia_module_1 = require("./noticia/noticia.module");
+const articulo_entity_1 = require("./articulo/articulo.entity");
+const pagina_entity_1 = require("./pagina/pagina.entity");
+const usuario_entity_1 = require("./usuario/usuario.entity");
+const usuario_module_1 = require("./usuario/usuario.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -20,17 +24,21 @@ AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'mysql',
                 host: '192.168.99.100',
-                port: 32771,
+                port: 32769,
                 username: 'jonathan',
                 password: '12345678',
                 database: 'web',
                 synchronize: true,
-                dropSchema: true,
+                dropSchema: false,
                 entities: [
-                    noticia_entity_1.NoticiaEntity
+                    noticia_entity_1.NoticiaEntity,
+                    pagina_entity_1.PaginaEntity,
+                    articulo_entity_1.ArticuloEntity,
+                    usuario_entity_1.UsuarioEntity
                 ]
             }),
             noticia_module_1.NoticiaModule,
+            usuario_module_1.UsuarioModule
         ],
         controllers: [
             app_controller_1.AppController

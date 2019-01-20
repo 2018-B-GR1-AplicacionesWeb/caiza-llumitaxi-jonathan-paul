@@ -1,5 +1,5 @@
 import { Noticia } from "../app.controller";
-import { NoticiaEntity } from "./noticia-entity";
+import { NoticiaEntity } from "./noticia.entity";
 import { FindManyOptions, Repository } from "typeorm";
 export declare class NoticiaService {
     private readonly _noticiaRepository;

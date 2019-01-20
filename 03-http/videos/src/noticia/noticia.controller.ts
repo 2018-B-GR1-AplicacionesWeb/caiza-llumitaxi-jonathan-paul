@@ -3,6 +3,8 @@ import {Body, Controller, Get, Param, Post, Query, Res} from "@nestjs/common";
 import {Noticia} from "../app.controller";
 import {NoticiaService} from "./noticia.service";
 import {__await} from "tslib";
+import {NoticiaEntity} from "./noticia.entity";
+import {FindManyOptions, Like} from "typeorm";
 
 @Controller('noticia')
 export class NoticiaController{
@@ -14,6 +16,7 @@ export class NoticiaController{
     @Get('inicio')
     async inicio(
         @Res() response,
+        @Query('busqueda') busqueda:string,
         @Query('accion') accion:string,
         @Query('titulo') titulo: string,
         @Body() text
@@ -27,12 +30,30 @@ export class NoticiaController{
                     mensaje = `Registro ${titulo} actualizado`;
                 case 'crear':
                     mensaje = `Registro ${titulo} creado`;
+                case 'buscar':
+                    mensaje = `Registro ${titulo} creado`;
             }
 
         }
         console.log(text);
 
-        const noticias = await this._noticiaService.buscar();
+        // const noticias = await this._noticiaService.buscar();
+
+        let noticias: NoticiaEntity[];
+        if (busqueda){
+            const consulta: FindManyOptions<NoticiaEntity> = {
+                where: [
+                {
+                    titulo: Like(`%${busqueda}%`)
+                },
+                {
+                    descripcion: Like(`%${busqueda}%`)
+                }
+            ]};
+            noticias = await await this._noticiaService.buscar(consulta);
+        } else {
+            noticias = await this._noticiaService.buscar()
+        }
 
         response.render(
             'inicio',

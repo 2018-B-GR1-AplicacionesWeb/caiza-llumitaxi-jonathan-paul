@@ -5,7 +5,8 @@
 //      el debe estar synchronize:true
 //
 
-import {Column, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {BeforeInsert, Column, Entity, Index, OneToMany, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {PaginaEntity} from "../pagina/pagina.entity";
 @Entity('noticia') //Es buena practica poner explicitamente el nombre de la tabla que queremos
 export class NoticiaEntity {
 
@@ -22,9 +23,24 @@ export class NoticiaEntity {
 
     @Column({
         name: 'descripcion_noticia',
-        type: 'text',
+        type: 'varchar',
         nullable: true
     })
     descripcion:String;
 
+    @OneToMany(
+        type => PaginaEntity,   //Que tabla vamos a relacionar
+        pagina => pagina.noticias //Campo que hace referencia como el Foreing key
+    )
+    paginas: PaginaEntity[];
+
+    @BeforeInsert()
+    primerConsole(){
+        console.log(`Esta es el primer console`)
+    }
+
+    @BeforeInsert()
+    segundoConsole(){
+        console.log(`El titulo es ${this.titulo}`);
+    }
 }

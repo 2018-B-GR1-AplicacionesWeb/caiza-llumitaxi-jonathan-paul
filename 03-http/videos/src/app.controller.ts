@@ -8,7 +8,7 @@ import {
     Param,
     Body,
     Headers,
-    UnauthorizedException, Res, Req
+    UnauthorizedException, Res, Req, Session
 } from '@nestjs/common';
 
 import { AppService } from './app.service';
@@ -16,6 +16,7 @@ import {Observable, of} from "rxjs";
 import {Request, Response} from 'express'
 import {NoticiaService} from "./noticia/noticia.service";
 import stringMatching = jasmine.stringMatching;
+import {UsuarioService} from "./usuario/usuario.service";
 
 // Un controlador solo sirve para recivir y responder una peticion
 
@@ -26,7 +27,8 @@ import stringMatching = jasmine.stringMatching;
 export class AppController { // Export en otros archivos importar a esta clase
 
     constructor(private readonly _servicio: AppService,
-                private readonly _noticiaService: NoticiaService) {
+                private readonly _noticiaService: NoticiaService,
+                private readonly _usuarioService: UsuarioService) {
     }
 
   // @Get()
@@ -135,6 +137,43 @@ export class AppController { // Export en otros archivos importar a esta clase
   //       }
   //   }
 
+    @Get('login')
+    mostrarLogin(
+        @Res() res
+    ){
+        res.render('login')
+    }
+
+    @Post('login')
+    @HttpCode(200)
+    async ejecutarLogin(
+        @Body('username') username: string,
+        @Body('password') password: string,
+        @Res() res,
+        @Session() sesion
+    ){
+        const respuesta = await this._usuarioService
+            .autenticar(username, password);
+            console.log(sesion);
+            // console.log(respuesta)
+        if (respuesta){
+            sesion.usuario = username;
+            res.send('ok');
+        }else {
+            res.redirect('login')
+        }
+    }
+
+    @Get('logout')
+    logout(
+        @Res() res,
+        @Session() sesion
+    ){
+        sesion.username = undefined;
+        sesion.destroy();
+        res.redirect('login');
+
+    }
 
 
 }
