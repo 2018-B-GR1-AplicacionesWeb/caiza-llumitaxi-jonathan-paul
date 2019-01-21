@@ -1,0 +1,261 @@
+.deszin, .infz h4 {
+    text-overflow: ellipsis
+}
+.funz, .heachm .persoh img, .imz img {
+    object-position: center;
+    object-fit: cover
+}
+
+.logo{
+    width: 150px;
+    padding: 5px 0
+}
+
+body, body div, form, li, menu, nav, ol, p, span, table, ul{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-weight: 400;
+    vertical-align: baseline;
+    background: 0 0
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #1A191F;
+    font-family: 'Nunito Sans', sans-serif;
+    color: #fff
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+ul {
+    list-style: none
+}
+
+.cont_des {
+    max-width: 90%;
+    margin: 0 auto
+}
+.heachm {
+    position: fixed;
+    height: 70px;
+    width: 100%;
+    z-index: 10;
+    background: rgba(20,19,24,.75);
+    top: 0;
+    left: 0;
+}
+.closmn, .open_n {
+    position: absolute
+}
+
+.heachm .lf_con .lg_hm {
+    width: 150px;
+    padding: 20px 0
+}
+.heachm .bt_hm,
+.heachm .lg_hm,
+.heachm .lg_hm img,
+.heachm .persoh img,
+.mghe,
+.mghe i {
+    display: inline-block;
+    vertical-align: middle
+}
+.heachm .bt_hm ul li a.open_b {
+    color: #F45F5F;
+    cursor: pointer;
+    padding: 10px 5px;
+    font-size: 16px;
+    display: block
+}
+.open_n.onaff {
+    opacity: 0
+}
+.open_n.onafn {
+    opacity: 1
+}
+.open_n.onaff,
+.open_n.onafn {
+    -webkit-transition: all .1s ease-in-out;
+    -moz-transition: all .1s ease-in-out;
+    -o-transition: all .1s ease-in-out;
+    transition: all .1s ease-in-out
+}
+
+.bor {
+    padding: 20px 0
+}
+.heachm .sea_hm form input[type=search] {
+    background-color: rgba(0, 0, 0, .4);
+    color: #fff;
+    border: 0;
+    font-size: 14px;
+    padding: 6px 20px;
+    border-radius: 20px;
+    width: 230px;
+    font-weight: 600;
+    font-family: 'Nunito Sans', sans-serif;
+    margin-right: -44px
+}
+.heachm .sea_hm form button[type=submit] {
+    background: 0;
+    border: 0;
+    vertical-align: middle;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    margin-bottom: 3px;
+    box-sizing: content-box
+}
+.heachm .sea_hm form button[type=submit] svg {
+    fill: #fff;
+    display: block;
+    width: 100%;
+    height: 100%
+}
+
+.rg_con {  /*Revisar queda mejor sin esto*/
+    float: right;
+    right: 0
+}
+.lf_con {
+    float: left;
+    left: 0
+}
+.hbu {
+    margin-top: 10px
+}
+.hbu .butx {
+    display: inline-block
+}
+.hbu .butx a {
+    padding: 8px 18px;
+    border: 1px solid #fff;
+    margin-right: 10px;
+    display: flex;
+    align-items: center
+}
+
+.hbu .butx a svg {
+    width: 16px;
+    height: 16px;
+    fill: #fff;
+    margin: 0 8px 0 0;
+    display: inline-block
+}
+
+.slix {
+    position: relative;
+    height: 55.65vw
+}
+.infos_slix,
+.slix .eff {
+    position: absolute;
+    width: 100%
+}
+.slix img {
+    width: 100%;
+    height: 55.65vw;
+    display: block;
+    z-index: -1
+}
+
+.infos_slix {
+    z-index: 8;
+    top: 39%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
+
+.slix .eff {
+    height: 100%;
+    background: -moz-linear-gradient(270deg, rgba(26, 25, 31, .7) 0, rgba(26, 25, 31, .9) 58%, rgba(26, 25, 31, .95) 73%, rgba(26, 25, 31, 1) 84%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(26, 25, 31, .7)), color-stop(58%, rgba(26, 25, 31, .9)), color-stop(73%, rgba(26, 25, 31, .95)), color-stop(84%, rgba(26, 25, 31, 1)));
+    background: -webkit-linear-gradient(270deg, rgba(26, 25, 31, .7) 0, rgba(26, 25, 31, .9) 58%, rgba(26, 25, 31, .95) 73%, rgba(26, 25, 31, 1) 84%);
+    background: -o-linear-gradient(270deg, rgba(26, 25, 31, .7) 0, rgba(26, 25, 31, .9) 58%, rgba(26, 25, 31, .95) 73%, rgba(26, 25, 31, 1) 84%);
+    background: -ms-linear-gradient(270deg, rgba(26, 25, 31, .7) 0, rgba(26, 25, 31, .9) 58%, rgba(26, 25, 31, .95) 73%, rgba(26, 25, 31, 1) 84%);
+    background: linear-gradient(180deg, rgba(26, 25, 31, .7) 0, rgba(26, 25, 31, .9) 58%, rgba(26, 25, 31, .95) 73%, rgba(26, 25, 31, 1) 84%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#1A191F', endColorstr='#1A191F', GradientType=0)
+}
+
+.tit h1,
+.tit span {
+    font-weight: 700;
+    font-size: 26px
+}
+
+.des p {
+    max-width: 400px;
+    color: #a6a6a6;
+    font-size: 18px;
+    font-weight: 500
+}
+
+.btcl i,
+.titz_all h2 a:hover {
+    color: #fff
+}
+.btz {
+    float: right;
+    margin-top: -4px
+}
+.btcl i {
+    font-size: 20px
+}
+
+.slz {
+    white-space: nowrap;
+    padding: 0 0 0 3.3%;
+    margin-top: 1%
+}
+.eps .slz .infalz,
+.slz .imz {
+    display: inline-block;
+    margin-right: 1.45vw;
+    position: relative;
+    width: 16.338%;
+    height: 22.6vw;
+    border-radius: 1.5%
+}
+
+.imz img,
+.slz .imz .opend {
+    width: 100%;
+    height: 100%;
+    position: absolute
+}
+.imz img {
+    border-radius: 1.5%;
+    white-space: normal
+}
+.allsl {
+    position: relative;
+    margin-top: -21vw
+}
+
+/*@media screen and (min-width: 1024px) and (max-width: 1279px) {*/
+    .slz .imz {
+        width: 17.338%;
+        height: 22.8vw
+    }
+    .eps .slz .imz,
+    .eps .slz .infalz {
+        width: 25.338%;
+        height: 13.8vw
+    }
+    .slix,
+    .slix img {
+        height: 62.65vw
+    }
+    .slix img {
+        width: 108%;
+        margin-left: -8%
+    }
+/*}*/

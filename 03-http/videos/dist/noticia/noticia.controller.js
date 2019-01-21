@@ -23,6 +23,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const noticia_service_1 = require("./noticia.service");
 const typeorm_1 = require("typeorm");
+const create_noticia_dto_1 = require("./dto/create-noticia.dto");
+const class_validator_1 = require("class-validator");
 let NoticiaController = class NoticiaController {
     constructor(_noticiaService) {
         this._noticiaService = _noticiaService;
@@ -30,16 +32,21 @@ let NoticiaController = class NoticiaController {
     inicio(response, busqueda, accion, titulo, text) {
         return __awaiter(this, void 0, void 0, function* () {
             let mensaje = undefined;
+            let clase = undefined;
             if (accion && titulo) {
                 switch (accion) {
                     case 'borrar':
                         mensaje = `Registro ${titulo} eliminado`;
+                        clase = 'alert alert-danger';
+                        break;
                     case 'actualizar':
                         mensaje = `Registro ${titulo} actualizado`;
+                        clase = 'alert alert-info';
+                        break;
                     case 'crear':
                         mensaje = `Registro ${titulo} creado`;
-                    case 'buscar':
-                        mensaje = `Registro ${titulo} creado`;
+                        clase = 'alert alert-success';
+                        break;
                 }
             }
             console.log(text);
@@ -64,7 +71,8 @@ let NoticiaController = class NoticiaController {
                 usuario: 'Jonathan',
                 arreglo: noticias,
                 booleano: false,
-                mensaje: mensaje
+                mensaje: mensaje,
+                clase: clase
             });
         });
     }
@@ -84,8 +92,22 @@ let NoticiaController = class NoticiaController {
     }
     crearNoticiaFuncion(response, noticia) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this._noticiaService.crear(noticia);
-            response.redirect('/noticia/inicio');
+            const objetoValidacionNoticia = new create_noticia_dto_1.CreateNoticiaDto();
+            objetoValidacionNoticia.titulo = noticia.titulo;
+            objetoValidacionNoticia.descripcion = noticia.descripcion;
+            const errores = yield class_validator_1.validate(objetoValidacionNoticia);
+            const hayErrores = errores.length > 0;
+            if (hayErrores) {
+                console.error(errores);
+                throw new common_1.BadRequestException({
+                    mensaje: 'Error de validacion'
+                });
+            }
+            else {
+                yield this._noticiaService.crear(noticia);
+                const parametroConsulta = `?accion=crear&titulo=${noticia.titulo}`;
+                response.redirect('/noticia/inicio' + parametroConsulta);
+            }
         });
     }
     actualizarNoticiaVista(response, idNoticia) {
@@ -101,7 +123,8 @@ let NoticiaController = class NoticiaController {
         return __awaiter(this, void 0, void 0, function* () {
             noticia.id = +idNoticia;
             yield this._noticiaService.actulizar(noticia);
-            response.redirect('/noticia/inicio');
+            const parametrosConsulta = `?accion=actualizar&titulo=${noticia.titulo}`;
+            response.redirect('/noticia/inicio' + parametrosConsulta);
         });
     }
 };
